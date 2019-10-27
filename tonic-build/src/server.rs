@@ -7,60 +7,25 @@ use syn::{Ident, Lit, LitStr};
 pub(crate) fn generate(service: &Service, proto_path: &str) -> TokenStream {
     let methods = generate_methods(&service, proto_path);
 
-    let server_make_service = quote::format_ident!("{}Server", service.name);
-    let server_service = quote::format_ident!("{}ServerSvc", service.name);
+    let server_service = quote::format_ident!("{}Server", service.name);
     let server_trait = quote::format_ident!("{}", service.name);
     let generated_trait = generate_trait(service, proto_path, server_trait.clone());
     let service_doc = generate_doc_comments(&service.comments.leading);
-    let server_new_doc = generate_doc_comment(&format!(
-        "Create a new {} from a type that implements {}.",
-        server_make_service, server_trait
-    ));
 
     quote! {
         #generated_trait
 
         #service_doc
-        #[derive(Clone, Debug)]
-        pub struct #server_make_service<T: #server_trait> {
-            inner: Arc<T>,
-        }
-
-        #[derive(Clone, Debug)]
+        #[derive(Debug)]
         #[doc(hidden)]
         pub struct #server_service<T: #server_trait> {
             inner: Arc<T>,
         }
 
-        impl<T: #server_trait> #server_make_service<T> {
-            #server_new_doc
+        impl<T: #server_trait> #server_service<T> {
             pub fn new(inner: T) -> Self {
                 let inner = Arc::new(inner);
-                Self::from_shared(inner)
-            }
-
-            pub fn from_shared(inner: Arc<T>) -> Self {
                 Self { inner }
-            }
-        }
-
-        impl<T: #server_trait> #server_service<T> {
-            pub fn new(inner: Arc<T>) -> Self {
-                Self { inner }
-            }
-        }
-
-        impl<T: #server_trait, R> Service<R> for #server_make_service<T> {
-            type Response = #server_service<T>;
-            type Error = Never;
-            type Future = Ready<Result<Self::Response, Self::Error>>;
-
-            fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-                Poll::Ready(Ok(()))
-            }
-
-            fn call(&mut self, _: R) -> Self::Future {
-                ok(#server_service::new(self.inner.clone()))
             }
         }
 
@@ -87,6 +52,13 @@ pub(crate) fn generate(service: &Service, proto_path: &str) -> TokenStream {
                             .unwrap())
                     }),
                 }
+            }
+        }
+
+        impl<T: #server_trait> Clone for #server_service<T> {
+            fn clone(&self) -> Self {
+                let inner = self.inner.clone();
+                Self { inner }
             }
         }
     }

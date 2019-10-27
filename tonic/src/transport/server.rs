@@ -151,12 +151,9 @@ impl Server {
 
     /// Consume this [`Server`] creating a future that will execute the server
     /// on [`tokio`]'s default executor.
-    pub async fn serve<M, S>(self, addr: SocketAddr, svc: M) -> Result<(), super::Error>
+    pub async fn serve<S>(self, addr: SocketAddr, svc: S) -> Result<(), super::Error>
     where
-        M: Service<(), Response = S>,
-        M::Error: Into<crate::Error> + Send + 'static,
-        M::Future: Send + 'static,
-        S: Service<Request<Body>, Response = Response<BoxBody>> + Send + 'static,
+        S: Service<Request<Body>, Response = Response<BoxBody>> + Clone + Send + 'static,
         S::Future: Send + 'static,
         S::Error: Into<crate::Error> + Send,
     {
@@ -371,19 +368,16 @@ where
     }
 }
 
-struct MakeSvc<M> {
+struct MakeSvc<S> {
     interceptor: Option<Interceptor>,
     concurrency_limit: Option<usize>,
     // timeout: Option<Duration>,
-    inner: M,
+    inner: S,
 }
 
-impl<M, S, T> Service<T> for MakeSvc<M>
+impl<S, T> Service<T> for MakeSvc<S>
 where
-    M: Service<(), Response = S>,
-    M::Error: Into<crate::Error> + Send,
-    M::Future: Send + 'static,
-    S: Service<Request<Body>, Response = Response<BoxBody>> + Send + 'static,
+    S: Service<Request<Body>, Response = Response<BoxBody>> + Clone + Send + 'static,
     S::Future: Send + 'static,
     S::Error: Into<crate::Error> + Send,
 {
@@ -393,18 +387,16 @@ where
         Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send + 'static>>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        MakeService::poll_ready(&mut self.inner, cx).map_err(Into::into)
+        Ok(()).into()
     }
 
     fn call(&mut self, _: T) -> Self::Future {
         let interceptor = self.interceptor.clone();
-        let make = self.inner.make_service(());
+        let svc = self.inner.clone();
         let concurrency_limit = self.concurrency_limit;
         // let timeout = self.timeout.clone();
 
         Box::pin(async move {
-            let svc = make.await.map_err(Into::into)?;
-
             let svc = ServiceBuilder::new()
                 .optional_layer(concurrency_limit.map(ConcurrencyLimitLayer::new))
                 // .optional_layer(timeout.map(TimeoutLayer::new))
