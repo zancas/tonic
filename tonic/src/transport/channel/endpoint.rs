@@ -38,7 +38,7 @@ pub struct Endpoint {
 impl Endpoint {
     // FIXME: determine if we want to expose this or not. This is really
     // just used in codegen for a shortcut.
-    #[doc(hidden)]
+
     pub fn new<D>(dst: D) -> Result<Self, Error>
     where
         D: TryInto<Self>,

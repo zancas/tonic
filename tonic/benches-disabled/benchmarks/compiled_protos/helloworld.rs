@@ -90,7 +90,7 @@ pub mod server {
         inner: Arc<T>,
     }
     #[derive(Clone, Debug)]
-    #[doc(hidden)]
+    
     pub struct GreeterServerSvc<T: Greeter> {
         inner: Arc<T>,
     }

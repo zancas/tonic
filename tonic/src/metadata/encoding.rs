@@ -18,28 +18,20 @@ mod value_encoding {
     use std::fmt;
 
     pub trait Sealed {
-        #[doc(hidden)]
         fn is_empty(value: &[u8]) -> bool;
 
-        #[doc(hidden)]
         fn from_bytes(value: &[u8]) -> Result<HeaderValue, InvalidMetadataValueBytes>;
 
-        #[doc(hidden)]
         fn from_shared(value: Bytes) -> Result<HeaderValue, InvalidMetadataValueBytes>;
 
-        #[doc(hidden)]
         fn from_static(value: &'static str) -> HeaderValue;
 
-        #[doc(hidden)]
         fn decode(value: &[u8]) -> Result<Bytes, InvalidMetadataValueBytes>;
 
-        #[doc(hidden)]
         fn equals(a: &HeaderValue, b: &[u8]) -> bool;
 
-        #[doc(hidden)]
         fn values_equal(a: &HeaderValue, b: &HeaderValue) -> bool;
 
-        #[doc(hidden)]
         fn fmt(value: &HeaderValue, f: &mut fmt::Formatter<'_>) -> fmt::Result;
     }
 }
@@ -52,10 +44,10 @@ pub trait ValueEncoding: Clone + Eq + PartialEq + Hash + self::value_encoding::S
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash)]
-#[doc(hidden)]
+
 pub enum Ascii {}
 #[derive(Clone, Debug, Eq, PartialEq, Hash)]
-#[doc(hidden)]
+
 pub enum Binary {}
 
 // ===== impl ValueEncoding =====

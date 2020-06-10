@@ -178,7 +178,6 @@ impl<VE: ValueEncoding> fmt::Display for MetadataKey<VE> {
 }
 
 impl InvalidMetadataKey {
-    #[doc(hidden)]
     pub fn new() -> InvalidMetadataKey {
         InvalidMetadataKey { _priv: () }
     }

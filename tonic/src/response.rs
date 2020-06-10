@@ -77,7 +77,6 @@ impl<T> Response<T> {
         res
     }
 
-    #[doc(hidden)]
     pub fn map<F, U>(self, f: F) -> Response<U>
     where
         F: FnOnce(T) -> U,

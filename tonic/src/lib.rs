@@ -106,7 +106,6 @@ pub use status::{Code, Status};
 
 pub(crate) type Error = Box<dyn std::error::Error + Send + Sync>;
 
-#[doc(hidden)]
 #[cfg(feature = "codegen")]
 #[cfg_attr(docsrs, doc(cfg(feature = "codegen")))]
 pub mod codegen;

@@ -66,7 +66,6 @@ impl<A: Clone, B: Clone, Request> Clone for Routes<A, B, Request> {
     }
 }
 
-#[doc(hidden)]
 pub struct Or<A, B, Request> {
     predicate: Arc<dyn Fn(&Request) -> bool + Send + Sync + 'static>,
     a: A,
