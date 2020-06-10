@@ -497,7 +497,7 @@ where
 }
 
 #[derive(Default, Clone, Debug)]
-#[doc(hidden)]
+
 pub struct Unimplemented {
     _p: (),
 }

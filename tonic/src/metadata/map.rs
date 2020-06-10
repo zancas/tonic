@@ -2029,18 +2029,15 @@ mod into_metadata_key {
     // Ultimately, this allows us to adjust the signatures of these methods
     // without breaking any external crate.
     pub trait Sealed<VE: ValueEncoding> {
-        #[doc(hidden)]
         fn insert(self, map: &mut MetadataMap, val: MetadataValue<VE>)
             -> Option<MetadataValue<VE>>;
 
-        #[doc(hidden)]
         fn append(self, map: &mut MetadataMap, val: MetadataValue<VE>) -> bool;
     }
 
     // ==== impls ====
 
     impl<VE: ValueEncoding> Sealed<VE> for MetadataKey<VE> {
-        #[doc(hidden)]
         #[inline]
         fn insert(
             self,
@@ -2052,7 +2049,6 @@ mod into_metadata_key {
                 .map(&MetadataValue::unchecked_from_header_value)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn append(self, map: &mut MetadataMap, val: MetadataValue<VE>) -> bool {
             map.headers.append(self.inner, val.inner)
@@ -2062,7 +2058,6 @@ mod into_metadata_key {
     impl<VE: ValueEncoding> IntoMetadataKey<VE> for MetadataKey<VE> {}
 
     impl<'a, VE: ValueEncoding> Sealed<VE> for &'a MetadataKey<VE> {
-        #[doc(hidden)]
         #[inline]
         fn insert(
             self,
@@ -2073,7 +2068,7 @@ mod into_metadata_key {
                 .insert(&self.inner, val.inner)
                 .map(&MetadataValue::unchecked_from_header_value)
         }
-        #[doc(hidden)]
+
         #[inline]
         fn append(self, map: &mut MetadataMap, val: MetadataValue<VE>) -> bool {
             map.headers.append(&self.inner, val.inner)
@@ -2083,7 +2078,6 @@ mod into_metadata_key {
     impl<'a, VE: ValueEncoding> IntoMetadataKey<VE> for &'a MetadataKey<VE> {}
 
     impl<VE: ValueEncoding> Sealed<VE> for &'static str {
-        #[doc(hidden)]
         #[inline]
         fn insert(
             self,
@@ -2097,7 +2091,7 @@ mod into_metadata_key {
                 .insert(key.inner, val.inner)
                 .map(&MetadataValue::unchecked_from_header_value)
         }
-        #[doc(hidden)]
+
         #[inline]
         fn append(self, map: &mut MetadataMap, val: MetadataValue<VE>) -> bool {
             // Perform name validation
@@ -2128,27 +2122,21 @@ mod as_metadata_key {
     // Ultimately, this allows us to adjust the signatures of these methods
     // without breaking any external crate.
     pub trait Sealed<VE: ValueEncoding> {
-        #[doc(hidden)]
         fn get(self, map: &MetadataMap) -> Option<&MetadataValue<VE>>;
 
-        #[doc(hidden)]
         fn get_mut(self, map: &mut MetadataMap) -> Option<&mut MetadataValue<VE>>;
 
-        #[doc(hidden)]
         fn get_all(self, map: &MetadataMap) -> Option<GetAll<'_, HeaderValue>>;
 
-        #[doc(hidden)]
         fn entry(self, map: &mut MetadataMap)
             -> Result<Entry<'_, HeaderValue>, InvalidMetadataKey>;
 
-        #[doc(hidden)]
         fn remove(self, map: &mut MetadataMap) -> Option<MetadataValue<VE>>;
     }
 
     // ==== impls ====
 
     impl<VE: ValueEncoding> Sealed<VE> for MetadataKey<VE> {
-        #[doc(hidden)]
         #[inline]
         fn get(self, map: &MetadataMap) -> Option<&MetadataValue<VE>> {
             map.headers
@@ -2156,7 +2144,6 @@ mod as_metadata_key {
                 .map(&MetadataValue::unchecked_from_header_value_ref)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn get_mut(self, map: &mut MetadataMap) -> Option<&mut MetadataValue<VE>> {
             map.headers
@@ -2164,13 +2151,11 @@ mod as_metadata_key {
                 .map(&MetadataValue::unchecked_from_mut_header_value_ref)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn get_all(self, map: &MetadataMap) -> Option<GetAll<'_, HeaderValue>> {
             Some(map.headers.get_all(self.inner))
         }
 
-        #[doc(hidden)]
         #[inline]
         fn entry(
             self,
@@ -2179,7 +2164,6 @@ mod as_metadata_key {
             Ok(map.headers.entry(self.inner))
         }
 
-        #[doc(hidden)]
         #[inline]
         fn remove(self, map: &mut MetadataMap) -> Option<MetadataValue<VE>> {
             map.headers
@@ -2191,7 +2175,6 @@ mod as_metadata_key {
     impl<VE: ValueEncoding> AsMetadataKey<VE> for MetadataKey<VE> {}
 
     impl<'a, VE: ValueEncoding> Sealed<VE> for &'a MetadataKey<VE> {
-        #[doc(hidden)]
         #[inline]
         fn get(self, map: &MetadataMap) -> Option<&MetadataValue<VE>> {
             map.headers
@@ -2199,7 +2182,6 @@ mod as_metadata_key {
                 .map(&MetadataValue::unchecked_from_header_value_ref)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn get_mut(self, map: &mut MetadataMap) -> Option<&mut MetadataValue<VE>> {
             map.headers
@@ -2207,13 +2189,11 @@ mod as_metadata_key {
                 .map(&MetadataValue::unchecked_from_mut_header_value_ref)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn get_all(self, map: &MetadataMap) -> Option<GetAll<'_, HeaderValue>> {
             Some(map.headers.get_all(&self.inner))
         }
 
-        #[doc(hidden)]
         #[inline]
         fn entry(
             self,
@@ -2222,7 +2202,6 @@ mod as_metadata_key {
             Ok(map.headers.entry(&self.inner))
         }
 
-        #[doc(hidden)]
         #[inline]
         fn remove(self, map: &mut MetadataMap) -> Option<MetadataValue<VE>> {
             map.headers
@@ -2234,7 +2213,6 @@ mod as_metadata_key {
     impl<'a, VE: ValueEncoding> AsMetadataKey<VE> for &'a MetadataKey<VE> {}
 
     impl<'a, VE: ValueEncoding> Sealed<VE> for &'a str {
-        #[doc(hidden)]
         #[inline]
         fn get(self, map: &MetadataMap) -> Option<&MetadataValue<VE>> {
             if !VE::is_valid_key(self) {
@@ -2245,7 +2223,6 @@ mod as_metadata_key {
                 .map(&MetadataValue::unchecked_from_header_value_ref)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn get_mut(self, map: &mut MetadataMap) -> Option<&mut MetadataValue<VE>> {
             if !VE::is_valid_key(self) {
@@ -2256,7 +2233,6 @@ mod as_metadata_key {
                 .map(&MetadataValue::unchecked_from_mut_header_value_ref)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn get_all(self, map: &MetadataMap) -> Option<GetAll<'_, HeaderValue>> {
             if !VE::is_valid_key(self) {
@@ -2265,7 +2241,6 @@ mod as_metadata_key {
             Some(map.headers.get_all(self))
         }
 
-        #[doc(hidden)]
         #[inline]
         fn entry(
             self,
@@ -2281,7 +2256,6 @@ mod as_metadata_key {
             Ok(entry)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn remove(self, map: &mut MetadataMap) -> Option<MetadataValue<VE>> {
             if !VE::is_valid_key(self) {
@@ -2296,7 +2270,6 @@ mod as_metadata_key {
     impl<'a, VE: ValueEncoding> AsMetadataKey<VE> for &'a str {}
 
     impl<VE: ValueEncoding> Sealed<VE> for String {
-        #[doc(hidden)]
         #[inline]
         fn get(self, map: &MetadataMap) -> Option<&MetadataValue<VE>> {
             if !VE::is_valid_key(self.as_str()) {
@@ -2307,7 +2280,6 @@ mod as_metadata_key {
                 .map(&MetadataValue::unchecked_from_header_value_ref)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn get_mut(self, map: &mut MetadataMap) -> Option<&mut MetadataValue<VE>> {
             if !VE::is_valid_key(self.as_str()) {
@@ -2318,7 +2290,6 @@ mod as_metadata_key {
                 .map(&MetadataValue::unchecked_from_mut_header_value_ref)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn get_all(self, map: &MetadataMap) -> Option<GetAll<'_, HeaderValue>> {
             if !VE::is_valid_key(self.as_str()) {
@@ -2327,7 +2298,6 @@ mod as_metadata_key {
             Some(map.headers.get_all(self.as_str()))
         }
 
-        #[doc(hidden)]
         #[inline]
         fn entry(
             self,
@@ -2342,7 +2312,6 @@ mod as_metadata_key {
             Ok(map.headers.entry(key))
         }
 
-        #[doc(hidden)]
         #[inline]
         fn remove(self, map: &mut MetadataMap) -> Option<MetadataValue<VE>> {
             if !VE::is_valid_key(self.as_str()) {
@@ -2357,7 +2326,6 @@ mod as_metadata_key {
     impl<VE: ValueEncoding> AsMetadataKey<VE> for String {}
 
     impl<'a, VE: ValueEncoding> Sealed<VE> for &'a String {
-        #[doc(hidden)]
         #[inline]
         fn get(self, map: &MetadataMap) -> Option<&MetadataValue<VE>> {
             if !VE::is_valid_key(self) {
@@ -2368,7 +2336,6 @@ mod as_metadata_key {
                 .map(&MetadataValue::unchecked_from_header_value_ref)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn get_mut(self, map: &mut MetadataMap) -> Option<&mut MetadataValue<VE>> {
             if !VE::is_valid_key(self) {
@@ -2379,7 +2346,6 @@ mod as_metadata_key {
                 .map(&MetadataValue::unchecked_from_mut_header_value_ref)
         }
 
-        #[doc(hidden)]
         #[inline]
         fn get_all(self, map: &MetadataMap) -> Option<GetAll<'_, HeaderValue>> {
             if !VE::is_valid_key(self) {
@@ -2388,7 +2354,6 @@ mod as_metadata_key {
             Some(map.headers.get_all(self.as_str()))
         }
 
-        #[doc(hidden)]
         #[inline]
         fn entry(
             self,
@@ -2403,7 +2368,6 @@ mod as_metadata_key {
             Ok(map.headers.entry(key))
         }
 
-        #[doc(hidden)]
         #[inline]
         fn remove(self, map: &mut MetadataMap) -> Option<MetadataValue<VE>> {
             if !VE::is_valid_key(self) {
@@ -2436,14 +2400,12 @@ mod as_encoding_agnostic_metadata_key {
     // Ultimately, this allows us to adjust the signatures of these methods
     // without breaking any external crate.
     pub trait Sealed {
-        #[doc(hidden)]
         fn contains_key(&self, map: &MetadataMap) -> bool;
     }
 
     // ==== impls ====
 
     impl<VE: ValueEncoding> Sealed for MetadataKey<VE> {
-        #[doc(hidden)]
         #[inline]
         fn contains_key(&self, map: &MetadataMap) -> bool {
             map.headers.contains_key(&self.inner)
@@ -2453,7 +2415,6 @@ mod as_encoding_agnostic_metadata_key {
     impl<VE: ValueEncoding> AsEncodingAgnosticMetadataKey for MetadataKey<VE> {}
 
     impl<'a, VE: ValueEncoding> Sealed for &'a MetadataKey<VE> {
-        #[doc(hidden)]
         #[inline]
         fn contains_key(&self, map: &MetadataMap) -> bool {
             map.headers.contains_key(&self.inner)
@@ -2463,7 +2424,6 @@ mod as_encoding_agnostic_metadata_key {
     impl<'a, VE: ValueEncoding> AsEncodingAgnosticMetadataKey for &'a MetadataKey<VE> {}
 
     impl<'a> Sealed for &'a str {
-        #[doc(hidden)]
         #[inline]
         fn contains_key(&self, map: &MetadataMap) -> bool {
             map.headers.contains_key(*self)
@@ -2473,7 +2433,6 @@ mod as_encoding_agnostic_metadata_key {
     impl<'a> AsEncodingAgnosticMetadataKey for &'a str {}
 
     impl Sealed for String {
-        #[doc(hidden)]
         #[inline]
         fn contains_key(&self, map: &MetadataMap) -> bool {
             map.headers.contains_key(self.as_str())
@@ -2483,7 +2442,6 @@ mod as_encoding_agnostic_metadata_key {
     impl AsEncodingAgnosticMetadataKey for String {}
 
     impl<'a> Sealed for &'a String {
-        #[doc(hidden)]
         #[inline]
         fn contains_key(&self, map: &MetadataMap) -> bool {
             map.headers.contains_key(self.as_str())

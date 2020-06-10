@@ -183,7 +183,6 @@ impl<T> Request<T> {
         request
     }
 
-    #[doc(hidden)]
     pub fn map<F, U>(self, f: F) -> Request<U>
     where
         F: FnOnce(T) -> U,

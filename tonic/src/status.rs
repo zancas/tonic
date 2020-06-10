@@ -105,7 +105,6 @@ pub enum Code {
     Unauthenticated = 16,
 
     // New Codes may be added in the future, so never exhaustively match!
-    #[doc(hidden)]
     __NonExhaustive,
 }
 
