@@ -88,7 +88,7 @@ impl CorsBuilder {
         self
     }
 
-    #[doc(hidden)]
+    
     pub fn into_config(self) -> Config {
         let Self {
             allow_credentials,

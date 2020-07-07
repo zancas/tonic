@@ -1,4 +1,3 @@
-#[doc(hidden)]
 pub mod cors;
 
 use crate::body::BoxBody;
@@ -147,7 +146,7 @@ where
     }
 }
 
-#[doc(hidden)]
+
 #[derive(Clone, Debug)]
 pub struct ProxyConfig {
     pub cors_config: cors::Config,
