@@ -339,7 +339,7 @@ impl Status {
         None
     }
 
-    // FIXME: bubble this into `transport` and expose generic http2 reasons.
+    // FIXME: bubble this into `wasm_client_transport` and expose generic http2 reasons.
     #[cfg(feature = "h2")]
     fn from_h2_error(err: &h2::Error) -> Status {
         // See https://github.com/grpc/grpc/blob/3977c30/doc/PROTOCOL-HTTP2.md#errors

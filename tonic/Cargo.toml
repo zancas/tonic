@@ -25,6 +25,7 @@ keywords = ["rpc", "grpc", "async", "futures", "protobuf"]
 [features]
 default = ["transport", "codegen", "prost"]
 codegen = ["async-trait"]
+wasm_client_transport = [ "codegen", "prost"]
 transport = [
     "hyper",
     "tokio",

@@ -86,6 +86,10 @@ pub mod server;
 #[cfg_attr(docsrs, doc(cfg(feature = "transport")))]
 pub mod transport;
 
+#[cfg(feature = "wasm_client_transport")]
+#[cfg_attr(docsrs, doc(cfg(feature = "wasm_client_transport")))]
+pub mod wasm_client_transport;
+
 mod interceptor;
 mod macros;
 mod request;

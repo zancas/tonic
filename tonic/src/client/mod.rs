@@ -14,7 +14,7 @@
 //! usage of the client difficult. The answer is simply to clone the client,
 //! which is cheap as all client instances will share the same channel for
 //! communication. For more details, see
-//! [transport::Channel](../transport/struct.Channel.html#multiplexing-requests).
+//! [wasm_client_transport::Channel](../wasm_client_transport/struct.Channel.html#multiplexing-requests).
 
 mod grpc;
 mod service;
